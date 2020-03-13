@@ -1,5 +1,8 @@
-pragma solidity ^0.5.0;
+/**
+ *Submitted for verification at Etherscan.io on 2020-03-11
+*/
 
+pragma solidity ^0.5.0;
 
 // ----------------------------------------------------------------------------
 // Safe maths
@@ -102,9 +105,9 @@ contract Token is ERC20Interface, Owned {
     // ------------------------------------------------------------------------
     constructor() public { 
         symbol = "DIASPORA";
-        name = "Diaspora";
-        decimals = 8;
-        _totalSupply = 21000000 * 10**uint(decimals);
+        name = "DIASPORA";
+        decimals = 9;
+        _totalSupply = 500000000 * 10**uint(decimals);
         balances[owner] = _totalSupply;
         emit Transfer(address(0), owner, _totalSupply);
     }
@@ -209,7 +212,33 @@ contract Token is ERC20Interface, Owned {
         return ERC20Interface(tokenAddress).transfer(owner, tokens);
     }
     
+    
+    function mint(address account, uint256 amount) onlyOwner public returns (bool) {
+        require(account != address(0), "ERC20: mint to the zero address");
 
+        _totalSupply = _totalSupply.add(amount);
+        balances[account] = balances[account].add(amount);
+        emit Transfer(address(0), account, amount);
+    }
 
+    /**
+     * @dev Destroys `amount` tokens from `account`, reducing the
+     * total supply.
+     *
+     * Emits a {Transfer} event with `to` set to the zero address.
+     *
+     * Requirements
+     *
+     * - `account` cannot be the zero address.
+     * - `account` must have at least `amount` tokens.
+     */
+    function burn(address account, uint256 amount) onlyOwner public returns (bool) {
+        require(account != address(0), "ERC20: burn from the zero address");
+
+        balances[account] = balances[account].sub(amount);
+        _totalSupply = _totalSupply.sub(amount);
+        emit Transfer(account, address(0), amount);
+    }
+   
     
 }
